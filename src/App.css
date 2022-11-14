@@ -2,8 +2,20 @@
     font-size: 1.5em;
     font-family: 'Roboto', sans-serif;
     white-space: pre-wrap;
+    color: rgba(0, 0, 0, 0.4);
 }
-#typed {
-    color: red;
+.typed {
+    color: #000;
+}
+.incorrect {
+    color: #f00;
+    text-decoration: underline;
+}
+#cursor {
+    position: absolute;
+    width: 2px;
+    height: 1em;
+    background-color: #000;
+    margin-top: 0.15em;
 }
 
