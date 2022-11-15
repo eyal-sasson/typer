@@ -49,39 +49,35 @@ class Typer extends React.Component {
         ev.stopPropagation();
         ev.preventDefault();
     }
-    wordToSpan(word) {
-        const classList = word.typed ? "typed" : "";
-        return word.map(char => <span className={classList}>{char}</span>);
-    }
     render() {
         const { text, typed } = this.state;
         let e = [];
         const cursor = <span id="cursor" />;
         for (const i in text) {
-            for (const j in text[i]) {
-                if (i == typed.length - 1 && j == typed[i].length) {
-                    e.push(cursor);
-                }
-                if (!typed[i]?.[j]) {
-                    e.push(<span>{text[i][j]}</span>);
-                } else if (typed[i][j] !== text[i][j]) {
-                    e.push(<span className="incorrect">{text[i][j]}</span>);
-                } else {
-                    e.push(<span className="typed">{typed[i][j]}</span>);
+            const word = text[i].slice(0, -1),
+                typedWord = typed[i] || [];
+            let wordE = [];
+            for (const j in word) {
+                const letter = word[j],
+                    typedLetter = typedWord[j];
+                if (typedLetter === letter) {
+                    wordE.push(<span className="correct">{letter}</span>);
+                } else if (typedLetter) {
+                    wordE.push(<span className="incorrect">{letter}</span>);
                 }
             }
-            if (typed[i]?.length >= text[i].length) {
-                const s = e.pop(); // remove the space
-                for (const j in typed[i]) {
-                    if (!text[i]?.[j] || text[i][j] === " ") {
-                        e.push(<span className="incorrect">{typed[i][j]}</span>);
-                    }
-                }
-                if (i == typed.length - 1) {
-                    e.push(cursor);
-                }
-                e.push(s);
+            const excess = typedWord.slice(word.length);
+            for (const j in excess) {
+                wordE.push(<span className="incorrect">{excess[j]}</span>);
             }
+            if (i == typed.length - 1) {
+                wordE.push(cursor);
+            }
+            const untyped = word.slice(typedWord.length);
+            for (const j in untyped) {
+                wordE.push(<span>{untyped[j]}</span>);
+            }
+            e.push(<span>{wordE} </span>);
         }
         
         return (
