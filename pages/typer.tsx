@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../styles/typer.module.css';
+import Router from 'next/router';
 
 const PLACEHOLDER = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
@@ -28,6 +29,7 @@ type WordState = {
 
 type TimerProps = {
     characters: number;
+    time: number;
 }
 
 type TimerState = {
@@ -98,7 +100,7 @@ class Typer extends React.Component<{}, TyperState> {
                             updateWord={state => this.updateWord(state)}>{word}</Word>
                     )}
                 </pre>
-                <Timer characters={characters} />
+                <Timer characters={characters} time={30} />
             </div>
         )
     }
@@ -190,10 +192,19 @@ class Timer extends React.Component<TimerProps, TimerState> {
         if (!this.state.startTime) return;
         const time = Math.round((Date.now() - this.state.startTime) / 1000),
             cpm = Math.round(this.props.characters / time * 60) || 0,
-            wpm = Math.round(cpm / 5);
+            wpm = Math.round(cpm / 5),
+            timeLeft = this.props.time - time;
+
+        if (timeLeft <= 25) {
+            Router.push({
+                pathname: "/results",
+                query: {cpm}
+            });
+        }
+
         return (
             <div id="timer">
-                {time} {cpm} {wpm}
+                {timeLeft} {cpm} {wpm}
             </div>
         );
     }
