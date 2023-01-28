@@ -1,23 +1,30 @@
 import React from 'react';
-import Router from 'next/router';
+import { withRouter, NextRouter } from 'next/router';
 import styles from '../styles/results.module.css';
 
-export default class Results extends React.Component {
-    render() {
-        if (!Router.query.cpm) {
-            Router.push('/');
-            return null;
+type ResultsProps = {
+    router: NextRouter;
+}
+
+class Results extends React.Component<ResultsProps> {
+    componentDidMount() {
+        if (!this.props.router.query.cpm) {
+            this.props.router.push('/');
         }
-        const cpm = parseInt(Router.query.cpm as string),
+    }
+    render() {
+        const cpm = parseInt(this.props.router.query.cpm as string),
               wpm = Math.round(cpm / 5);
         return (
             <div id={styles.results}>
                 <h1>Results</h1>
                 <p>WPM: {wpm}</p>
                 <p>CPM: {cpm}</p>
-                <button className={styles.retry} onClick={() => Router.push('/')}>Try again</button>
+                <button className={styles.retry} onClick={() => this.props.router.push('/')}>Try again</button>
             </div>
         );
     }
 }
+
+export default withRouter(Results);
 
