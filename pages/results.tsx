@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter, NextRouter } from 'next/router';
+import Head from 'next/head';
 import styles from '../styles/results.module.css';
 
 type ResultsProps = {
@@ -17,6 +18,10 @@ class Results extends React.Component<ResultsProps> {
               wpm = Math.round(cpm / 5);
         return (
             <div id={styles.results}>
+                <Head>
+                    <title>Typer: Results</title>
+                </Head>
+
                 <h1>Results</h1>
                 <p>WPM: {wpm}</p>
                 <p>CPM: {cpm}</p>
